@@ -16,7 +16,7 @@ import collectionmanager.business.types.Id;
 
 
 @Service
-public class InMemoryMoviesStore implements MoviesStore {
+class InMemoryMoviesStore implements MoviesStore {
 
     private Map<Id, Movie> store = new HashMap<>();
 
