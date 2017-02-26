@@ -34,7 +34,10 @@ public enum Rating {
         return stringValue;
     }
 
-    public static Rating of(int rating) {
+    public static Rating of(Integer rating) {
+        if (rating == null) {
+            return Rating.UNRATED;
+        }
         return Arrays.stream(values())
             .filter(r -> r.toInt() == rating)
             .findFirst()

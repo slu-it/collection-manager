@@ -14,13 +14,17 @@ import collectionmanager.commons.Transformer;
 class GameFileToBoTransformer implements Transformer<GameFile, Game> {
 
     @Override
-    public Game transform(GameFile gameFile) {
-        Game game = new Game(Name.of(gameFile.getName()));
-        game.setRating(Rating.of(gameFile.getRating()));
-        game.setPlatform(Platform.of(gameFile.getPlatform()));
-        game.setProgress(Progress.of(gameFile.getProgress()));
-        game.setDone(gameFile.isDone());
+    public Game transform(GameFile file) {
+
+        Name name = Name.of(file.getName());
+        Platform platform = Platform.of(file.getPlatform());
+
+        Game game = new Game(name, platform);
+        game.setRating(Rating.of(file.getRating()));
+        game.setProgress(Progress.of(file.getProgress()));
+        game.setDone(file.isDone());
         return game;
+
     }
 
 }

@@ -3,6 +3,10 @@ package collectionmanager.api.games;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -11,12 +15,8 @@ import javax.validation.Valid;
 import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,14 +44,19 @@ public class GamesController {
     private final Transformer<PersistedGame, GameResource> boToDtoTf;
     private final Transformer<GameResource, Game> dtoToBoTf;
 
-    @GetMapping
+    @RequestMapping(method = GET)
     @ResponseStatus(HttpStatus.OK)
-    public List<GameResource> get(@RequestParam(defaultValue = "all") String platform) throws NotFoundException {
-        Stream<PersistedGame> games = service.get(Platform.of(platform));
+    public List<GameResource> get(@RequestParam(required = false) String platform) throws NotFoundException {
+        Stream<PersistedGame> games;
+        if (platform != null) {
+            games = service.get(Platform.of(platform));
+        } else {
+            games = service.get(Platform.ALL);
+        }
         return games.map(this::transformAndAddSelfLink).collect(toList());
     }
 
-    @PostMapping
+    @RequestMapping(method = POST)
     @ResponseStatus(HttpStatus.CREATED)
     public GameResource post(@Valid @RequestBody GameResource body) {
         Game game = dtoToBoTf.transform(body);
@@ -59,14 +64,14 @@ public class GamesController {
         return transformAndAddSelfLink(persistedGame);
     }
 
-    @GetMapping("/{id}")
+    @RequestMapping(path = "/{id}", method = GET)
     @ResponseStatus(HttpStatus.OK)
     public GameResource getForId(@PathVariable String id) throws NotFoundException {
         PersistedGame persistedGame = service.get(Id.of(id));
         return transformAndAddSelfLink(persistedGame);
     }
 
-    @PutMapping("/{id}")
+    @RequestMapping(path = "/{id}", method = PUT)
     @ResponseStatus(HttpStatus.OK)
     public GameResource putForId(@PathVariable String id, @Valid @RequestBody GameResource body) throws NotFoundException {
         Game game = dtoToBoTf.transform(body);
@@ -74,7 +79,7 @@ public class GamesController {
         return transformAndAddSelfLink(persistedGame);
     }
 
-    @DeleteMapping("/{id}")
+    @RequestMapping(path = "/{id}", method = DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteForId(@PathVariable String id) throws NotFoundException {
         service.deleteById(Id.of(id));

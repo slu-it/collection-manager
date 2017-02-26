@@ -14,13 +14,17 @@ import collectionmanager.commons.Transformer;
 class GameResourceToBoTransformer implements Transformer<GameResource, Game> {
 
     @Override
-    public Game transform(GameResource dto) {
-        Game bo = new Game(Name.of(dto.getName()));
-        bo.setRating(Rating.of(dto.getRating()));
-        bo.setPlatform(Platform.of(dto.getPlatform()));
-        bo.setProgress(Progress.of(dto.getProgress()));
-        bo.setDone(dto.isDone());
+    public Game transform(GameResource resource) {
+
+        Name name = Name.of(resource.getName());
+        Platform platform = Platform.of(resource.getPlatform());
+
+        Game bo = new Game(name, platform);
+        bo.setRating(Rating.of(resource.getRating()));
+        bo.setProgress(Progress.of(resource.getProgress()));
+        bo.setDone(resource.isDone());
         return bo;
+
     }
 
 }

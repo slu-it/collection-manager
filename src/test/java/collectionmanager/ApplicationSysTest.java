@@ -4,13 +4,16 @@ import static java.util.Arrays.stream;
 import static java.util.stream.Collectors.toSet;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.net.URI;
 import java.util.Set;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.UriTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -90,44 +93,44 @@ class ApplicationSysTest {
     }
 
     private GameResource createGame(GameResource game) {
-        String url = index.getLink("games").getHref();
-        ResponseEntity<GameResource> response = template.postForEntity(url, game, GameResource.class);
+        URI uri = uriOf(index.getLink("games"));
+        ResponseEntity<GameResource> response = template.postForEntity(uri, game, GameResource.class);
         assertThat(response.getStatusCode()).isSameAs(HttpStatus.CREATED);
         return response.getBody();
     }
 
     private GameResource getGame(GameResource game) {
-        String url = game.getLink("self").getHref();
-        ResponseEntity<GameResource> response = template.getForEntity(url, GameResource.class);
+        URI uri = uriOf(game.getLink("self"));
+        ResponseEntity<GameResource> response = template.getForEntity(uri, GameResource.class);
         assertThat(response.getStatusCode()).isSameAs(HttpStatus.OK);
         return response.getBody();
     }
 
     private Set<GameResource> getAllGames() {
-        String url = index.getLink("games").getHref();
-        ResponseEntity<GameResource[]> response = template.getForEntity(url, GameResource[].class);
+        URI uri = uriOf(index.getLink("games"));
+        ResponseEntity<GameResource[]> response = template.getForEntity(uri, GameResource[].class);
         assertThat(response.getStatusCode()).isSameAs(HttpStatus.OK);
         return stream(response.getBody()).collect(toSet());
     }
 
     private Set<GameResource> getAllGamesForPlatform(String platform) {
-        String url = index.getLink("games").getHref() + "?platform=" + platform;
-        ResponseEntity<GameResource[]> response = template.getForEntity(url, GameResource[].class);
+        URI uri = uriOf(index.getLink("games"), platform);
+        ResponseEntity<GameResource[]> response = template.getForEntity(uri, GameResource[].class);
         assertThat(response.getStatusCode()).isSameAs(HttpStatus.OK);
         return stream(response.getBody()).collect(toSet());
     }
 
     private GameResource updateGame(GameResource game) {
-        String url = game.getLink("self").getHref();
+        URI uri = uriOf(game.getLink("self"));
         HttpEntity<GameResource> request = new HttpEntity<>(game);
-        ResponseEntity<GameResource> response = template.exchange(url, HttpMethod.PUT, request, GameResource.class);
+        ResponseEntity<GameResource> response = template.exchange(uri, HttpMethod.PUT, request, GameResource.class);
         assertThat(response.getStatusCode()).isSameAs(HttpStatus.OK);
         return response.getBody();
     }
 
     private void deleteGame(GameResource game) {
-        String url = game.getLink("self").getHref();
-        ResponseEntity<Void> response = template.exchange(url, HttpMethod.DELETE, new HttpEntity(null), Void.class);
+        URI uri = uriOf(game.getLink("self"));
+        ResponseEntity<Void> response = template.exchange(uri, HttpMethod.DELETE, new HttpEntity(null), Void.class);
         assertThat(response.getStatusCode()).isSameAs(HttpStatus.NO_CONTENT);
     }
 
@@ -139,6 +142,10 @@ class ApplicationSysTest {
 
     private String getLink(ResourceSupport resource, String ref) {
         return resource.getLink(ref).getHref();
+    }
+
+    private URI uriOf(Link link, Object... parameters) {
+        return new UriTemplate(link.getHref()).expand(parameters);
     }
 
 }

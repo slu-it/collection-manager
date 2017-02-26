@@ -26,13 +26,14 @@ public class GameResource extends ResourceSupport {
     @NotEmpty
     private String name;
 
+    /** See {@link Game#platform}. */
+    @NotEmpty
+    private String platform;
+
     /** See {@link Game#rating}. */
     @Min(0L)
     @Max(10L)
-    private int rating;
-
-    /** See {@link Game#platform}. */
-    private String platform;
+    private Integer rating;
 
     /** See {@link Game#progress}. */
     @Min(0L)

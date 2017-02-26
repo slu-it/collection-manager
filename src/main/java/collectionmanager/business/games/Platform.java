@@ -8,12 +8,13 @@ import java.util.Set;
 
 public enum Platform {
 
-    UNKNOWN("unknown"),
     PLAYSTATION_3("PS3", "PlayStation 3", "playstation-3"),
     PLAYSTATION_4("PS4", "PlayStation 4", "playstation-4"),
-    VITA("VITA", "PlayStation Vita"),
+    PLAYSTATION_VITA("VITA", "PlayStation Vita"),
+
     XBOX_ONE("XB1", "Xbox One", "xbox-one"),
-    ALL("all");
+
+    ALL("");
 
     private String code;
     private Set<String> aliases;
