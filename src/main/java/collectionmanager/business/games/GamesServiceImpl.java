@@ -16,8 +16,11 @@ class GamesServiceImpl implements GamesService {
     private final GamesStore store;
 
     @Override
-    public Stream<PersistedGame> get() {
-        return store.findAll();
+    public Stream<PersistedGame> get(Platform platform) {
+        if (platform == Platform.ALL) {
+            return store.findAll();
+        }
+        return store.findAllForPlatform(platform);
     }
 
     @Override

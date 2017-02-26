@@ -10,9 +10,10 @@ public enum Platform {
 
     UNKNOWN("unknown"),
     STEAM("Steam"),
-    PLAYSTATION_3("PlayStation 3", "PS3"),
-    PLAYSTATION_4("PlayStation 4", "PS4"),
-    XBOX_ONE("Xbox One", "XB1");
+    PLAYSTATION_3("PlayStation 3", "playstation-3", "PS3"),
+    PLAYSTATION_4("PlayStation 4", "playstation-4", "PS4"),
+    XBOX_ONE("Xbox One", "xbox-one", "XB1"),
+    ALL("all");
 
     private String name;
     private Set<String> aliases;

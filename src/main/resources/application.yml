@@ -1,0 +1,6 @@
+storage:
+  folder: "data"
+  games:
+    folder: ${storage.folder}/games
+  movies:
+    folder: ${storage.folder}/movies

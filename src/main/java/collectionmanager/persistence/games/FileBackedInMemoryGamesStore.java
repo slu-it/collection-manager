@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import collectionmanager.business.games.Game;
 import collectionmanager.business.games.GamesStore;
 import collectionmanager.business.games.PersistedGame;
+import collectionmanager.business.games.Platform;
 import collectionmanager.business.types.Id;
 import lombok.RequiredArgsConstructor;
 
@@ -28,6 +29,11 @@ class FileBackedInMemoryGamesStore implements GamesStore {
     @Override
     public Stream<PersistedGame> findAll() {
         return cache.getAll().stream();
+    }
+
+    @Override
+    public Stream<PersistedGame> findAllForPlatform(Platform platform) {
+        return findAll().filter(game -> platform.equals(game.getGame().getPlatform()));
     }
 
     @Override

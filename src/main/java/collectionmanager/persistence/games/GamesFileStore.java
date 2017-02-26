@@ -16,8 +16,8 @@ import org.springframework.stereotype.Component;
 import collectionmanager.business.games.Game;
 import collectionmanager.business.games.PersistedGame;
 import collectionmanager.business.types.Id;
-import collectionmanager.commons.Transformer;
 import collectionmanager.commons.JsonUtils;
+import collectionmanager.commons.Transformer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,7 +34,7 @@ class GamesFileStore {
 
     @PostConstruct
     void init() {
-        File directory = settings.getStorageDirectory();
+        File directory = settings.getFolder();
         if (directory.mkdirs()) {
             log.debug("created data storage directory: {}", directory);
         }
@@ -45,7 +45,7 @@ class GamesFileStore {
     }
 
     private Stream<File> getFileCandidates() {
-        File directory = settings.getStorageDirectory();
+        File directory = settings.getFolder();
         File[] files = directory.listFiles();
         if (files == null) {
             throw new IllegalStateException("couldn't read files from directory: " + directory);
@@ -80,14 +80,14 @@ class GamesFileStore {
 
     private void doStore(PersistedGame persistedGame) throws IOException {
         String fileName = persistedGame.getId().toString();
-        File directory = settings.getStorageDirectory();
+        File directory = settings.getFolder();
         File file = new File(directory, fileName);
         GameFile gameFile = boToFileTf.transform(persistedGame.getGame());
         jsonUtils.writeToFile(file, gameFile);
     }
 
     void remove(Id id) {
-        File file = new File(settings.getStorageDirectory(), id.toString());
+        File file = new File(settings.getFolder(), id.toString());
         if (file.delete()) {
             log.debug("deleted file: {}", file);
         } else {

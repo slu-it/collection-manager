@@ -8,7 +8,7 @@ import collectionmanager.business.types.Id;
 
 public interface GamesService {
 
-    Stream<PersistedGame> get();
+    Stream<PersistedGame> get(Platform platform);
 
     PersistedGame get(Id id) throws NotFoundException;
 

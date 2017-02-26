@@ -11,10 +11,10 @@ import collectionmanager.commons.Transformer;
 
 
 @Component
-class GameDtoToBoTransformer implements Transformer<GameDto, Game> {
+class GameResourceToBoTransformer implements Transformer<GameResource, Game> {
 
     @Override
-    public Game transform(GameDto dto) {
+    public Game transform(GameResource dto) {
         Game bo = new Game(Name.of(dto.getName()));
         bo.setRating(Rating.of(dto.getRating()));
         bo.setPlatform(Platform.of(dto.getPlatform()));

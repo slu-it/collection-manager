@@ -10,9 +10,9 @@ import lombok.Data;
 
 @Data
 @Component
-@ConfigurationProperties("persistence.games")
+@ConfigurationProperties("storage.games")
 class GamesPersistenceSettings {
 
-    File storageDirectory = new File("data/games");
+    private File folder;
 
 }

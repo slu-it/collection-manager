@@ -10,7 +10,7 @@ import lombok.Data;
 
 
 @Data
-class GameDto extends ResourceSupport {
+class GameResource extends ResourceSupport {
 
     @NotEmpty
     private String name;

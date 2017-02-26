@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import collectionmanager.business.games.Game;
 import collectionmanager.commons.Transformer;
 
+
 @Component
 class GameBoToFileTransformer implements Transformer<Game, GameFile> {
 

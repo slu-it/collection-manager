@@ -10,6 +10,8 @@ public interface GamesStore {
 
     Stream<PersistedGame> findAll();
 
+    Stream<PersistedGame> findAllForPlatform(Platform platform);
+
     Optional<PersistedGame> findById(Id id);
 
     PersistedGame create(Game game);
