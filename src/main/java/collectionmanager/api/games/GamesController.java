@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.stream.Stream;
 import javax.validation.Valid;
 
-import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -44,8 +43,10 @@ public class GamesController {
     private final Transformer<PersistedGame, GameResource> boToDtoTf;
     private final Transformer<GameResource, Game> dtoToBoTf;
 
-    @RequestMapping(method = GET)
+    /* CRUD OPERATIONS */
+
     @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(method = GET)
     public List<GameResource> get(@RequestParam(required = false) String platform) throws NotFoundException {
         Stream<PersistedGame> games;
         if (platform != null) {
@@ -56,50 +57,75 @@ public class GamesController {
         return games.map(this::transformAndAddSelfLink).collect(toList());
     }
 
-    @RequestMapping(method = POST)
     @ResponseStatus(HttpStatus.CREATED)
+    @RequestMapping(method = POST)
     public GameResource post(@Valid @RequestBody GameResource body) {
         Game game = dtoToBoTf.transform(body);
         PersistedGame persistedGame = service.create(game);
         return transformAndAddSelfLink(persistedGame);
     }
 
-    @RequestMapping(path = "/{id}", method = GET)
     @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(path = "/{id}", method = GET)
     public GameResource getForId(@PathVariable String id) throws NotFoundException {
         PersistedGame persistedGame = service.get(Id.of(id));
         return transformAndAddSelfLink(persistedGame);
     }
 
-    @RequestMapping(path = "/{id}", method = PUT)
     @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(path = "/{id}", method = PUT)
     public GameResource putForId(@PathVariable String id, @Valid @RequestBody GameResource body) throws NotFoundException {
         Game game = dtoToBoTf.transform(body);
         PersistedGame persistedGame = service.update(Id.of(id), game);
         return transformAndAddSelfLink(persistedGame);
     }
 
-    @RequestMapping(path = "/{id}", method = DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @RequestMapping(path = "/{id}", method = DELETE)
     public void deleteForId(@PathVariable String id) throws NotFoundException {
         service.deleteById(Id.of(id));
     }
 
-    private GameResource transformAndAddSelfLink(PersistedGame game) {
-        GameResource dto = boToDtoTf.transform(game);
-        dto.add(selfLink(game));
-        return dto;
+    /* OTHER OPERATIONS */
+
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(path = "/{id}/markAsDone", method = POST)
+    public GameResource markAsDoneForId(@PathVariable String id) throws NotFoundException {
+        PersistedGame persistedGame = service.markAsDoneById(Id.of(id));
+        return transformAndAddSelfLink(persistedGame);
     }
 
-    private Link selfLink(PersistedGame game) {
-        String id = game.getId().toString();
-        return linkTo(methodOn(GamesController.class).getForId(id)).withSelfRel();
+    @ResponseStatus(HttpStatus.OK)
+    @RequestMapping(path = "/{id}/markAsNotDone", method = POST)
+    public GameResource markAsNotDoneForId(@PathVariable String id) throws NotFoundException {
+        PersistedGame persistedGame = service.markAsNotDoneById(Id.of(id));
+        return transformAndAddSelfLink(persistedGame);
     }
+
+    /* EXCEPTION HANDLING */
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
     void handleNotFoundException(NotFoundException e) {
         log.debug(e.getMessage(), e);
+    }
+
+    /* UTILITIES */
+
+    private GameResource transformAndAddSelfLink(PersistedGame persistedGame) {
+        GameResource dto = boToDtoTf.transform(persistedGame);
+
+        String id = persistedGame.getId().toString();
+        dto.add(linkTo(methodOn(GamesController.class).getForId(id)).withSelfRel());
+
+        Game game = persistedGame.getGame();
+        if (game.isDone()) {
+            dto.add(linkTo(methodOn(GamesController.class).markAsNotDoneForId(id)).withRel("markAsNotDone"));
+        } else {
+            dto.add(linkTo(methodOn(GamesController.class).markAsDoneForId(id)).withRel("markAsDone"));
+        }
+
+        return dto;
     }
 
 }

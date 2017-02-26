@@ -18,4 +18,8 @@ public interface GamesService {
 
     void deleteById(Id id) throws NotFoundException;
 
+    PersistedGame markAsDoneById(Id id) throws NotFoundException;
+
+    PersistedGame markAsNotDoneById(Id id) throws NotFoundException;
+
 }

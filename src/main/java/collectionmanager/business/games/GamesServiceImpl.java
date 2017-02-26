@@ -46,4 +46,18 @@ class GamesServiceImpl implements GamesService {
         }
     }
 
+    @Override
+    public PersistedGame markAsDoneById(Id id) throws NotFoundException {
+        Game game = get(id).getGame();
+        game.setDone(true);
+        return update(id, game);
+    }
+
+    @Override
+    public PersistedGame markAsNotDoneById(Id id) throws NotFoundException {
+        Game game = get(id).getGame();
+        game.setDone(false);
+        return update(id, game);
+    }
+
 }
