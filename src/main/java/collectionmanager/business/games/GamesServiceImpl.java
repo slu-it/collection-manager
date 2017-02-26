@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 class GamesServiceImpl implements GamesService {
 
-    private final GamesStore store;
+    private final GamesPersistenceService store;
 
     @Override
     public Stream<PersistedGame> get(Platform platform) {

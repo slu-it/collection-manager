@@ -7,7 +7,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
 import collectionmanager.business.games.Game;
-import collectionmanager.business.games.GamesStore;
+import collectionmanager.business.games.GamesPersistenceService;
 import collectionmanager.business.games.PersistedGame;
 import collectionmanager.business.games.Platform;
 import collectionmanager.business.types.Id;
@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-class FileBackedInMemoryGamesStore implements GamesStore {
+class FileBackedInMemoryGamesPersistenceService implements GamesPersistenceService {
 
     private final GamesCache cache;
     private final GamesFileStore fileStore;

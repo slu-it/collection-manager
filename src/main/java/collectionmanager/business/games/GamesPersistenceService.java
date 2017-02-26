@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 import collectionmanager.business.types.Id;
 
 
-public interface GamesStore {
+public interface GamesPersistenceService {
 
     Stream<PersistedGame> findAll();
 
