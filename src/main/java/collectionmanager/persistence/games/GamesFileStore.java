@@ -66,6 +66,7 @@ class GamesFileStore {
         GameFile gameFile = jsonUtils.readFromFile(file, GameFile.class);
         Game game = fileToBoTf.transform(gameFile);
         Id id = Id.of(file.getName());
+        log.debug("read file: {}", file);
         return PersistedGame.of(id, game);
     }
 
@@ -84,6 +85,7 @@ class GamesFileStore {
         File file = new File(directory, fileName);
         GameFile gameFile = boToFileTf.transform(persistedGame.getGame());
         jsonUtils.writeToFile(file, gameFile);
+        log.debug("wrote to file: {}", file);
     }
 
     void remove(Id id) {

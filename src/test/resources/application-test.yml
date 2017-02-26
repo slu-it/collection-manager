@@ -1,5 +1,5 @@
 storage:
-  folder: "test-data"
+  folder: "target/test-data"
 
 logging:
   level:
