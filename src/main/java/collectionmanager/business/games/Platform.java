@@ -9,25 +9,25 @@ import java.util.Set;
 public enum Platform {
 
     UNKNOWN("unknown"),
-    STEAM("Steam"),
-    PLAYSTATION_3("PlayStation 3", "playstation-3", "PS3"),
-    PLAYSTATION_4("PlayStation 4", "playstation-4", "PS4"),
-    XBOX_ONE("Xbox One", "xbox-one", "XB1"),
+    PLAYSTATION_3("PS3", "PlayStation 3", "playstation-3"),
+    PLAYSTATION_4("PS4", "PlayStation 4", "playstation-4"),
+    VITA("VITA", "PlayStation Vita"),
+    XBOX_ONE("XB1", "Xbox One", "xbox-one"),
     ALL("all");
 
-    private String name;
+    private String code;
     private Set<String> aliases;
 
-    Platform(String name, String... aliases) {
-        this.name = name;
+    Platform(String code, String... aliases) {
+        this.code = code;
         this.aliases = new HashSet<>();
-        this.aliases.add(name.toLowerCase());
+        this.aliases.add(code.toLowerCase());
         stream(aliases).map(String::toLowerCase).forEach(this.aliases::add);
     }
 
     @Override
     public String toString() {
-        return name;
+        return code;
     }
 
     public static Platform of(String name) {

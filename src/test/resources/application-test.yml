@@ -1,2 +1,7 @@
 storage:
   folder: "test-data"
+
+logging:
+  level:
+    root: "WARN"
+    collectionmanager: "DEBUG"
