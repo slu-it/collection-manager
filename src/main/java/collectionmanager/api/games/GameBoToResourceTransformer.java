@@ -21,6 +21,7 @@ class GameBoToResourceTransformer implements Transformer<PersistedGame, GameReso
         gameResource.setRating(game.getRating().toInt());
         gameResource.setPlatform(game.getPlatform().toString());
         gameResource.setProgress(game.getProgress().toInt());
+        gameResource.setDone(game.isDone());
         return gameResource;
     }
 

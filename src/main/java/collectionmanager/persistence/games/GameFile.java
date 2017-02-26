@@ -9,4 +9,5 @@ class GameFile {
     private int rating;
     private String platform;
     private int progress;
+    private boolean done;
 }

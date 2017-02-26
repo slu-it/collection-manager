@@ -19,6 +19,7 @@ class GameResourceToBoTransformer implements Transformer<GameResource, Game> {
         bo.setRating(Rating.of(dto.getRating()));
         bo.setPlatform(Platform.of(dto.getPlatform()));
         bo.setProgress(Progress.of(dto.getProgress()));
+        bo.setDone(dto.isDone());
         return bo;
     }
 

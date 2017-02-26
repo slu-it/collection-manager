@@ -19,6 +19,7 @@ class GameFileToBoTransformer implements Transformer<GameFile, Game> {
         game.setRating(Rating.of(gameFile.getRating()));
         game.setPlatform(Platform.of(gameFile.getPlatform()));
         game.setProgress(Progress.of(gameFile.getProgress()));
+        game.setDone(gameFile.isDone());
         return game;
     }
 

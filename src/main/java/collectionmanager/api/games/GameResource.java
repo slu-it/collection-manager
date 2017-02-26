@@ -6,6 +6,7 @@ import javax.validation.constraints.Min;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.hateoas.ResourceSupport;
 
+import collectionmanager.business.games.Game;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,17 +22,24 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class GameResource extends ResourceSupport {
 
+    /** See {@link Game#name}. */
     @NotEmpty
     private String name;
 
+    /** See {@link Game#rating}. */
     @Min(0L)
     @Max(10L)
     private int rating;
 
+    /** See {@link Game#platform}. */
     private String platform;
 
+    /** See {@link Game#progress}. */
     @Min(0L)
     @Max(100L)
     private int progress;
+
+    /** See {@link Game#done}. */
+    private boolean done;
 
 }
