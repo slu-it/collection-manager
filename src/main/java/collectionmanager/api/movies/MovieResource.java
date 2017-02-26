@@ -7,10 +7,12 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.hateoas.ResourceSupport;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 
 @Data
-class MovieDto extends ResourceSupport {
+@EqualsAndHashCode(callSuper = false)
+public class MovieResource extends ResourceSupport {
 
     @NotEmpty
     private String name;

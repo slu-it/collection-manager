@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/api/games", produces = MediaType.APPLICATION_JSON_VALUE)
-class GamesController {
+public class GamesController {
 
     private final GamesService service;
     private final Transformer<PersistedGame, GameResource> boToDtoTf;
@@ -46,14 +46,14 @@ class GamesController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    List<GameResource> get(@RequestParam(defaultValue = "all") String platform) throws NotFoundException {
+    public List<GameResource> get(@RequestParam(defaultValue = "all") String platform) throws NotFoundException {
         Stream<PersistedGame> games = service.get(Platform.of(platform));
         return games.map(this::transformAndAddSelfLink).collect(toList());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    GameResource post(@Valid @RequestBody GameResource body) {
+    public GameResource post(@Valid @RequestBody GameResource body) {
         Game game = dtoToBoTf.transform(body);
         PersistedGame persistedGame = service.create(game);
         return transformAndAddSelfLink(persistedGame);
@@ -61,14 +61,14 @@ class GamesController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    GameResource getForId(@PathVariable String id) throws NotFoundException {
+    public GameResource getForId(@PathVariable String id) throws NotFoundException {
         PersistedGame persistedGame = service.get(Id.of(id));
         return transformAndAddSelfLink(persistedGame);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    GameResource putForId(@PathVariable String id, @Valid @RequestBody GameResource body) throws NotFoundException {
+    public GameResource putForId(@PathVariable String id, @Valid @RequestBody GameResource body) throws NotFoundException {
         Game game = dtoToBoTf.transform(body);
         PersistedGame persistedGame = service.update(Id.of(id), game);
         return transformAndAddSelfLink(persistedGame);
@@ -76,7 +76,7 @@ class GamesController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    void deleteForId(@PathVariable String id) throws NotFoundException {
+    public void deleteForId(@PathVariable String id) throws NotFoundException {
         service.deleteById(Id.of(id));
     }
 

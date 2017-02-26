@@ -9,10 +9,10 @@ import collectionmanager.commons.Transformer;
 
 
 @Component
-class MovieDtoToBoTransformer implements Transformer<MovieDto, Movie> {
+class MovieResourceToBoTransformer implements Transformer<MovieResource, Movie> {
 
     @Override
-    public Movie transform(MovieDto dto) {
+    public Movie transform(MovieResource dto) {
         Movie bo = new Movie(Name.of(dto.getName()));
         bo.setRating(Rating.of(dto.getRating()));
         return bo;

@@ -32,21 +32,21 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/api/movies", produces = MediaType.APPLICATION_JSON_VALUE)
-class MoviesController {
+public class MoviesController {
 
     private final MoviesService service;
-    private final Transformer<PersistedMovie, MovieDto> boToDtoTf;
-    private final Transformer<MovieDto, Movie> dtoToBoTf;
+    private final Transformer<PersistedMovie, MovieResource> boToDtoTf;
+    private final Transformer<MovieResource, Movie> dtoToBoTf;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    List<MovieDto> get() throws NotFoundException {
+    public List<MovieResource> get() throws NotFoundException {
         return service.get().map(this::transformAndAddSelfLink).collect(toList());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    MovieDto post(@Valid @RequestBody MovieDto body) {
+    public MovieResource post(@Valid @RequestBody MovieResource body) {
         Movie movie = dtoToBoTf.transform(body);
         PersistedMovie persistedMovie = service.create(movie);
         return transformAndAddSelfLink(persistedMovie);
@@ -54,14 +54,14 @@ class MoviesController {
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    MovieDto getForId(@PathVariable String id) throws NotFoundException {
+    public MovieResource getForId(@PathVariable String id) throws NotFoundException {
         PersistedMovie persistedMovie = service.get(Id.of(id));
         return transformAndAddSelfLink(persistedMovie);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    MovieDto putForId(@PathVariable String id, @Valid @RequestBody MovieDto body) throws NotFoundException {
+    public MovieResource putForId(@PathVariable String id, @Valid @RequestBody MovieResource body) throws NotFoundException {
         Movie movie = dtoToBoTf.transform(body);
         PersistedMovie persistedMovie = service.update(Id.of(id), movie);
         return transformAndAddSelfLink(persistedMovie);
@@ -73,8 +73,8 @@ class MoviesController {
         service.deleteById(Id.of(id));
     }
 
-    private MovieDto transformAndAddSelfLink(PersistedMovie movie) {
-        MovieDto dto = boToDtoTf.transform(movie);
+    private MovieResource transformAndAddSelfLink(PersistedMovie movie) {
+        MovieResource dto = boToDtoTf.transform(movie);
         dto.add(selfLink(movie));
         return dto;
     }
